@@ -19,8 +19,10 @@ os.environ['GOOGLE_API_KEY']=geminiapi_key
 
 
 ai = ChatGoogleGenerativeAI(model="gemini-1.5-pro-002",temperature=0.9)
-response = ai.invoke("what is 2 divided by 2")
-print(type(response))
+
+
+# response = ai.invoke("what is 2 divided by 2")
+# print(type(response))
 
 
 # How To Have Conversations with AI
@@ -30,13 +32,16 @@ print(type(response))
 # Human message - This is basically the prompt entered by the human
 # AI message - This is the response of the ai
 
-messages = [
+message = [
     ("system', 'Solve the following math problems"),
     ("human", "81 divided by 9 is?")
 ]
 
 
-result
+result = ai.invoke(message)
+print(result)
+print('\n\n')
+print(result.content)
 
 
 
