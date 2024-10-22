@@ -5,3 +5,4 @@ load_dotenv()
 
 geminiapi_key = os.getenv('geminiapi_key')
 
+Tedting
