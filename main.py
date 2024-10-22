@@ -34,7 +34,9 @@ ai = ChatGoogleGenerativeAI(model="gemini-1.5-pro-002",temperature=0.9)
 
 message = [
     ("system', 'Solve the following math problems"),
-    ("human", "81 divided by 9 is?")
+    ("human", "81 divided by 9 is?"),
+    ("ai", "81 divided by 9 is 9"),
+    ("human", "What is 10 times 5?")
 ]
 
 
@@ -42,6 +44,29 @@ result = ai.invoke(message)
 print(result)
 print('\n\n')
 print(result.content)
+
+
+# Real Time conversation demo.
+
+chat_history = []
+
+systemMessage = ("system", "You're an helpful AI assitant.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
