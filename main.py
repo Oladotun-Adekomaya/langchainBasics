@@ -32,25 +32,50 @@ ai = ChatGoogleGenerativeAI(model="gemini-1.5-pro-002",temperature=0.9)
 # Human message - This is basically the prompt entered by the human
 # AI message - This is the response of the ai
 
-message = [
-    ("system', 'Solve the following math problems"),
-    ("human", "81 divided by 9 is?"),
-    ("ai", "81 divided by 9 is 9"),
-    ("human", "What is 10 times 5?")
-]
+# message = [
+#     ("system', 'Solve the following math problems"),
+#     ("human", "81 divided by 9 is?"),
+#     ("ai", "81 divided by 9 is 9"),
+#     ("human", "What is 10 times 5?")
+# ]
 
 
-result = ai.invoke(message)
-print(result)
-print('\n\n')
-print(result.content)
+# result = ai.invoke(message)
+# print(result)
+# print('\n\n')
+# print(result.content)
 
 
 # Real Time conversation demo.
 
-chat_history = []
+chatHistory = []
 
 systemMessage = ("system", "You're an helpful AI assitant.")
+
+chatHistory.append(systemMessage)
+
+userInput = input("What is your question?\n\n")
+
+# humanMessage = ("human", userInput)
+# chatHistory.append(humanMessage)
+# response = ai.invoke(chatHistory)
+# aiResponseText = response.content
+# aiMessage = ("ai", aiResponseText)
+# print(aiResponseText)
+# chatHistory.append(aiMessage)
+
+
+while userInput != 'exit':
+    humanMessage = ("human", userInput)
+    chatHistory.append(humanMessage)
+    response = ai.invoke(chatHistory)
+    aiResponseText = response.content
+    aiMessage = ("ai", aiResponseText)
+    print("\n\n")
+    print(aiResponseText)
+    chatHistory.append(aiMessage)  
+    userInput = input("What is your question?\n\n")
+
 
 
 
