@@ -5,14 +5,16 @@ import google.generativeai as genai
 
 load_dotenv()
 
-geminiapi_key = os.getenv('geminiapi_key')
+# geminiapi_key = os.getenv('geminiapi_key')
 
 
 
-llm = ChatGoogleGenerativeAI(model="gemini-pro")
-llm.invoke("Sing a ballad of LangChain.")
+# llm = ChatGoogleGenerativeAI(model="gemini-pro")
+# llm.invoke("Sing a ballad of LangChain.")
 
-genai.configure(api_key=geminiapi_key)
+# genai.configure(api_key=geminiapi_key)
+
+print(os.environ)
 
 # get a list of all models in gemini
 # for model in genai.list_models():
