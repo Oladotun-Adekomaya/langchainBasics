@@ -54,7 +54,7 @@ systemMessage = ("system", "You're an helpful AI assitant.")
 
 chatHistory.append(systemMessage)
 
-userInput = input("What is your question?\n\n")
+
 
 # humanMessage = ("human", userInput)
 # chatHistory.append(humanMessage)
@@ -65,18 +65,21 @@ userInput = input("What is your question?\n\n")
 # chatHistory.append(aiMessage)
 
 
-while userInput != 'exit':
-    humanMessage = ("human", userInput)
+while True:
+    userInput = input("You: ")
+    if userInput.lower() == "exit":
+        break
+
+    humanMessage = ("human", userInput) # create human message
     chatHistory.append(humanMessage)
     response = ai.invoke(chatHistory)
     aiResponseText = response.content
     aiMessage = ("ai", aiResponseText)
-    print("\n\n")
-    print(aiResponseText)
+    print(f'AI: {aiResponseText}')
     chatHistory.append(aiMessage)  
-    userInput = input("What is your question?\n\n")
 
-
+print('______ Message History ______')
+print(chatHistory)
 
 
 
