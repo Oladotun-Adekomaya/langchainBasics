@@ -6,6 +6,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain 
 from google.cloud import firestore
 from langchain_google_firestore import FirestoreChatMessageHistory
+from langchain_core.output_parsers import StrOutputParser
 
 
 
@@ -146,15 +147,60 @@ ai = ChatGoogleGenerativeAI(model="gemini-1.5-pro-002",temperature=0.9)
 
 # Part 3
 
-message = [
-    ("system", "You're a helpful assistant"),
-    ("human", "Tell me a joke about {topic}")
-]
-template = ChatPromptTemplate(message)
-prompt = template.invoke({"topic": "dog"})
+# message = [
+#     ("system", "You're a helpful assistant"),
+#     ("human", "Tell me a joke about {topic}")
+# ]
+# template = ChatPromptTemplate(message)
+# prompt = template.invoke({"topic": "dog"})
 
 
-print(prompt)
+# print(prompt)
+
+# Chains
+
+prompt_template = ChatPromptTemplate(
+    [
+        ("system", "You are a comedian who tells jokes about {topic}."),
+        ("user", "Tell me {joke_count} jokes."),
+    ]
+)
+
+chain = prompt_template | ai | StrOutputParser()
+
+result = chain.invoke({"topic": "lawyers", "joke_count": 3})
+
+print(result)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
