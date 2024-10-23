@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI 
 from langchain.prompts import PromptTemplate 
+from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain 
 from google.cloud import firestore
 from langchain_google_firestore import FirestoreChatMessageHistory
@@ -90,51 +91,40 @@ ai = ChatGoogleGenerativeAI(model="gemini-1.5-pro-002",temperature=0.9)
 
 #  Project that stores chat history to firetore
 # Initialize Firestore Client
-print("Initializing Firestore Client...")
-client = firestore.Client(project=PROJECT_ID)
+# print("Initializing Firestore Client...")
+# client = firestore.Client(project=PROJECT_ID)
 
-print("Initializing Firestore Chat Message History...")
-chat_history = FirestoreChatMessageHistory(
-    session_id=SESSION_ID,
-    collection=COLLECTION_NAME,
-    client=client,
-)
-print("Chat History Initialized.")
-print("Current Chat History:", chat_history.messages)
+# print("Initializing Firestore Chat Message History...")
+# chat_history = FirestoreChatMessageHistory(
+#     session_id=SESSION_ID,
+#     collection=COLLECTION_NAME,
+#     client=client,
+# )
+# print("Chat History Initialized.")
+# print("Current Chat History:", chat_history.messages)
 
-print("Start chatting with the AI. Type 'exit' to quit.")
+# print("Start chatting with the AI. Type 'exit' to quit.")
 
-while True:
-    human_input = input("User: ")
-    if human_input.lower() == "exit":
-        break
+# while True:
+#     human_input = input("User: ")
+#     if human_input.lower() == "exit":
+#         break
 
-    chat_history.add_user_message(human_input)
+#     chat_history.add_user_message(human_input)
 
-    ai_response = ai.invoke(chat_history.messages)
-    chat_history.add_ai_message(ai_response.content)
+#     ai_response = ai.invoke(chat_history.messages)
+#     chat_history.add_ai_message(ai_response.content)
 
-    print(f"AI: {ai_response.content}")
-
-print(chat_history)
-
-
-
-
-
-
-
-
-
-
-
-
-
+#     print(f"AI: {ai_response.content}")
 
 
 
 # Prompt Template
-promptTemplateName = PromptTemplate.from_template("I want to open a restaurant for {restaurant}. Suggest a fancy name for this.")
+user_input = input("What topic do you want a joke about? ")
+template = "Tell me a joke about {topic}"
+prompt_template = PromptTemplate.from_template(template)
+prompt = prompt_template.invoke({"topic" : user_input})
+print(prompt)
 
 
 
