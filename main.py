@@ -129,26 +129,32 @@ ai = ChatGoogleGenerativeAI(model="gemini-1.5-pro-002",temperature=0.9)
 # prompt = prompt_template.invoke({"topic" : user_input})
 # print(prompt)
 
-template_multiple = """You're an helpful assistant.
-Human: Tell me a {adjective} story about a {animal}.
-Assistant:"""
+# Part 2
+# template_multiple = """You're an helpful assistant.
+# Human: Tell me a {adjective} story about a {animal}.
+# Assistant:"""
 
-chat_template = ChatPromptTemplate.from_template(template_multiple)
+# chat_template = ChatPromptTemplate.from_template(template_multiple)
 
-prompt = chat_template.invoke({"adjective": "fast", "animal": "dog"})
+# prompt = chat_template.invoke({"adjective": "fast", "animal": "dog"})
 
-user_input_adjective = input("What is the adjective? ")
-user_input_animal = input("What is the animal? ")
+# user_input_adjective = input("What is the adjective? ")
+# user_input_animal = input("What is the animal? ")
+
+# print(prompt)
+
+
+# Part 3
+
+message = [
+    ("system", "You're a helpful assistant"),
+    ("human", "Tell me a joke about {topic}")
+]
+template = ChatPromptTemplate(message)
+prompt = template.invoke({"topic": "dog"})
+
 
 print(prompt)
-
-
-
-
-
-
-
-
 
 
 
