@@ -198,22 +198,41 @@ ai = ChatGoogleGenerativeAI(model="gemini-1.5-pro-002",temperature=0.9)
 # # Output
 # print(response)
 
+# prompt_template = ChatPromptTemplate(
+#     [
+#         ("system", "You're a comedian that tell's joke about {topic}"),
+#         ("user","Tell me a joke")
+#     ]
+# )
+
+# chain = prompt_template | ai | StrOutputParser()
+
+# analysis_prompt = ChatPromptTemplate.from_template("is this a funny joke? {joke}")
+
+# composed_chain = {"joke": chain} | analysis_prompt | ai | StrOutputParser()
+
+# result = composed_chain.invoke({"topic": "bears"})
+
+# print(result)
+
+# Chain Extending - Counting the number of characters in the output and Capitalizing the outpur
+
 prompt_template = ChatPromptTemplate(
     [
-        ("system", "You're a comedian that tell's joke about {topic}"),
-        ("user","Tell me a joke")
+        ("system", "You're a comedian that tells joke about {topic}"),
+        ("human", "Tell me a joke")
     ]
 )
 
-chain = prompt_template | ai | StrOutputParser()
+capitalize = RunnableLambda(lambda x: x.upper())
+count_words = RunnableLambda(lambda x: f"Word Count:{len(x.split())}\n{x}")
+# output = RunnableLambda(lambda x: f"{x.content}")
 
-analysis_prompt = ChatPromptTemplate.from_template("is this a funny joke? {joke}")
+chain = prompt_template| ai | StrOutputParser() | capitalize | count_words
 
-composed_chain = {"joke": chain} | analysis_prompt | ai | StrOutputParser()
+result = chain.invoke({"topic" : "bears"})
 
-result = composed_chain.invoke({"topic": "bears"})
-
-# print(result)
+print(result)
 
 
 # Branching
