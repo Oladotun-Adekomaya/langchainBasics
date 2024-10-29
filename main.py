@@ -7,6 +7,7 @@ from langchain.chains import LLMChain
 from google.cloud import firestore
 from langchain_google_firestore import FirestoreChatMessageHistory
 from langchain_core.output_parsers import StrOutputParser
+from langchain.schema.runnable import RunnableLambda, RunnableSequence
 
 
 
@@ -159,21 +160,63 @@ ai = ChatGoogleGenerativeAI(model="gemini-1.5-pro-002",temperature=0.9)
 
 # Chains
 
+# prompt_template = ChatPromptTemplate(
+#     [
+#         ("system", "You are a comedian who tells jokes about {topic}."),
+#         ("user", "Tell me {joke_count} jokes."),
+#     ]
+# )
+
+# chain = prompt_template | ai | StrOutputParser()
+
+# result = chain.invoke({"topic": "lawyers", "joke_count": 3})
+
+# print(result)
+
+
+# HOW CHAINS WORK UNDER THE HOOD
+
+# Define prompt templates
+# prompt_template = ChatPromptTemplate(
+#     [
+#         ("system", "You are a comedian who tells jokes about {topic}."),
+#         ("human", "Tell me {joke_count} jokes."),
+#     ]
+# )
+
+# format_prompt = RunnableLambda(lambda x: prompt_template.format_prompt(**x))
+# invoke_ai = RunnableLambda(lambda x: ai.invoke(x.to_messages()))
+# parse_output = RunnableLambda(lambda x: x.content)
+
+
+# # Create the RunnableSequence (equivalent to the LCEL chain)
+# chain = RunnableSequence(first=format_prompt, middle=[invoke_ai], last=parse_output)
+
+# # Run the chain
+# response = chain.invoke({"topic": "lawyers", "joke_count": 3})
+
+# # Output
+# print(response)
+
 prompt_template = ChatPromptTemplate(
     [
-        ("system", "You are a comedian who tells jokes about {topic}."),
-        ("user", "Tell me {joke_count} jokes."),
+        ("system", "You're a comedian that tell's joke about {topic}"),
+        ("user","Tell me a joke")
     ]
 )
 
 chain = prompt_template | ai | StrOutputParser()
 
-result = chain.invoke({"topic": "lawyers", "joke_count": 3})
+analysis_prompt = ChatPromptTemplate.from_template("is this a funny joke? {joke}")
 
-print(result)
+composed_chain = {"joke": chain} | analysis_prompt | ai | StrOutputParser()
+
+result = composed_chain.invoke({"topic": "bears"})
+
+# print(result)
 
 
-
+# Branching
 
 
 
