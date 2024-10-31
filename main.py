@@ -268,10 +268,23 @@ def analyze_cons(features):
    )
    return cons_template.format_prompt(features=features)
 
+pros_branch_chain =( 
+    RunnableLambda(lambda x: analyze_pros(x)) | ai | StrOutputParser()
+)
+
+cons_branch_chain =( 
+    RunnableLambda(lambda x: analyze_cons(x)) | ai | StrOutputParser()
+)
 
 
+chain = (
+    prompt_template
+    | ai
+    | StrOutputParser()
+    | RunnableParallel(branches={"pros": pros_branch_chain, "cons": cons_branch_chain})
+)
 
-
+result = chain.invoke({"product":"wireless microphone"})
 
 # Branching
 
