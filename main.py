@@ -253,7 +253,7 @@ prompt_template = ChatPromptTemplate(
 def analyze_pros(features):
    pros_template = ChatPromptTemplate(
     [
-        ("system", "You're an expert product reviewer.")
+        ("system", "You're an expert product reviewer."),
         ("user", "Given the following features,{features}, list the pros of these features")
     ]
    )
@@ -262,7 +262,7 @@ def analyze_pros(features):
 def analyze_cons(features):
    cons_template = ChatPromptTemplate(
     [
-        ("system", "You're an expert product reviewer.")
+        ("system", "You're an expert product reviewer."),
         ("user", "Given the following features,{features}, list the cons of these features")
     ]
    )
@@ -286,6 +286,7 @@ chain = (
 
 result = chain.invoke({"product":"wireless microphone"})
 
+print(result)
 # Branching
 
 
