@@ -7,7 +7,8 @@ from langchain.chains import LLMChain
 from google.cloud import firestore
 from langchain_google_firestore import FirestoreChatMessageHistory
 from langchain_core.output_parsers import StrOutputParser
-from langchain.schema.runnable import RunnableLambda, RunnableSequence
+from langchain.schema.runnable import RunnableLambda, RunnableSequence, RunnableParallel
+
 
 
 
@@ -217,22 +218,27 @@ ai = ChatGoogleGenerativeAI(model="gemini-1.5-pro-002",temperature=0.9)
 
 # Chain Extending - Counting the number of characters in the output and Capitalizing the outpur
 
-prompt_template = ChatPromptTemplate(
-    [
-        ("system", "You're a comedian that tells joke about {topic}"),
-        ("human", "Tell me a joke")
-    ]
-)
+# prompt_template = ChatPromptTemplate(
+#     [
+#         ("system", "You're a comedian that tells joke about {topic}"),
+#         ("human", "Tell me a joke")
+#     ]
+# )
 
-capitalize = RunnableLambda(lambda x: x.upper())
-count_words = RunnableLambda(lambda x: f"Word Count:{len(x.split())}\n{x}")
-# output = RunnableLambda(lambda x: f"{x.content}")
+# capitalize = RunnableLambda(lambda x: x.upper())
+# count_words = RunnableLambda(lambda x: f"Word Count:{len(x.split())}\n{x}")
+# # output = RunnableLambda(lambda x: f"{x.content}")
 
-chain = prompt_template| ai | StrOutputParser() | capitalize | count_words
+# chain = prompt_template| ai | StrOutputParser() | capitalize | count_words
 
-result = chain.invoke({"topic" : "bears"})
+# result = chain.invoke({"topic" : "bears"})
 
-print(result)
+# print(result)
+
+
+# Chains Parallel
+
+
 
 
 # Branching
