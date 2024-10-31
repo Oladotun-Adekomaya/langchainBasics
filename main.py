@@ -28,7 +28,7 @@ geminiapi_key = os.getenv('geminiapi_key')
 os.environ['GOOGLE_API_KEY']=geminiapi_key
 
 
-ai = ChatGoogleGenerativeAI(model="gemini-1.5-pro-002",temperature=0.9)
+ai = ChatGoogleGenerativeAI(model="gemini-1.5-flash",temperature=0.9)
 
 
 # response = ai.invoke("what is 2 divided by 2")
@@ -268,6 +268,10 @@ def analyze_cons(features):
    )
    return cons_template.format_prompt(features=features)
 
+
+def combine_pros_cons(pros, cons):
+    return f"Pros:\n{pros}\n\nCons:\n{cons}"
+
 pros_branch_chain =( 
     RunnableLambda(lambda x: analyze_pros(x)) | ai | StrOutputParser()
 )
@@ -282,9 +286,10 @@ chain = (
     | ai
     | StrOutputParser()
     | RunnableParallel(branches={"pros": pros_branch_chain, "cons": cons_branch_chain})
+    | RunnableLambda(lambda x: combine_pros_cons(x["branches"]["pros"], x["branches"]["cons"]))
 )
 
-result = chain.invoke({"product":"wireless microphone"})
+result = chain.invoke({"product":"Macbook Pro"})
 
 print(result)
 # Branching
