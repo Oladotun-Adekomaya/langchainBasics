@@ -238,12 +238,36 @@ ai = ChatGoogleGenerativeAI(model="gemini-1.5-pro-002",temperature=0.9)
 
 # Chains Parallel - Run 2 or simultaneous operation
 
+#Here we're building a program that asks ai for
+
 prompt_template = ChatPromptTemplate(
     [
         ("system","You're a expert product reviewer."),
         ("user","List the main features of the product {product}")
     ]
 )
+
+# build two seperate functions - one that takes the result of the features and spits out a prompt toanalyses
+# the pros, and another one that takes the result of the features and spits out a prompt to analyses the cons
+
+def analyze_pros(features):
+   pros_template = ChatPromptTemplate(
+    [
+        ("system", "You're an expert product reviewer.")
+        ("user", "Given the following features,{features}, list the pros of these features")
+    ]
+   )
+   return pros_template.format_prompt(features=features)
+
+def analyze_cons(features):
+   cons_template = ChatPromptTemplate(
+    [
+        ("system", "You're an expert product reviewer.")
+        ("user", "Given the following features,{features}, list the cons of these features")
+    ]
+   )
+   return cons_template.format_prompt(features=features)
+
 
 
 
