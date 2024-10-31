@@ -236,7 +236,15 @@ ai = ChatGoogleGenerativeAI(model="gemini-1.5-pro-002",temperature=0.9)
 # print(result)
 
 
-# Chains Parallel
+# Chains Parallel - Run 2 or simultaneous operation
+
+prompt_template = ChatPromptTemplate(
+    [
+        ("system","You're a expert product reviewer."),
+        ("user","List the main features of the product {product}")
+    ]
+)
+
 
 
 
