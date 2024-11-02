@@ -7,7 +7,7 @@ from langchain.chains import LLMChain
 from google.cloud import firestore
 from langchain_google_firestore import FirestoreChatMessageHistory
 from langchain_core.output_parsers import StrOutputParser
-from langchain.schema.runnable import RunnableLambda, RunnableSequence, RunnableParallel
+from langchain.schema.runnable import RunnableLambda, RunnableSequence, RunnableParallel, RunnableBranch
 
 
 
@@ -240,58 +240,60 @@ ai = ChatGoogleGenerativeAI(model="gemini-1.5-flash",temperature=0.9)
 
 #Here we're building a program that asks ai for
 
-prompt_template = ChatPromptTemplate(
-    [
-        ("system","You're a expert product reviewer."),
-        ("user","List the main features of the product {product}")
-    ]
-)
+# prompt_template = ChatPromptTemplate(
+#     [
+#         ("system","You're a expert product reviewer."),
+#         ("user","List the main features of the product {product}")
+#     ]
+# )
 
 # build two seperate functions - one that takes the result of the features and spits out a prompt toanalyses
 # the pros, and another one that takes the result of the features and spits out a prompt to analyses the cons
 
-def analyze_pros(features):
-   pros_template = ChatPromptTemplate(
-    [
-        ("system", "You're an expert product reviewer."),
-        ("user", "Given the following features,{features}, list the pros of these features")
-    ]
-   )
-   return pros_template.format_prompt(features=features)
+# def analyze_pros(features):
+#    pros_template = ChatPromptTemplate(
+#     [
+#         ("system", "You're an expert product reviewer."),
+#         ("user", "Given the following features,{features}, list the pros of these features")
+#     ]
+#    )
+#    return pros_template.format_prompt(features=features)
 
-def analyze_cons(features):
-   cons_template = ChatPromptTemplate(
-    [
-        ("system", "You're an expert product reviewer."),
-        ("user", "Given the following features,{features}, list the cons of these features")
-    ]
-   )
-   return cons_template.format_prompt(features=features)
-
-
-def combine_pros_cons(pros, cons):
-    return f"Pros:\n{pros}\n\nCons:\n{cons}"
-
-pros_branch_chain =( 
-    RunnableLambda(lambda x: analyze_pros(x)) | ai | StrOutputParser()
-)
-
-cons_branch_chain =( 
-    RunnableLambda(lambda x: analyze_cons(x)) | ai | StrOutputParser()
-)
+# def analyze_cons(features):
+#    cons_template = ChatPromptTemplate(
+#     [
+#         ("system", "You're an expert product reviewer."),
+#         ("user", "Given the following features,{features}, list the cons of these features")
+#     ]
+#    )
+#    return cons_template.format_prompt(features=features)
 
 
-chain = (
-    prompt_template
-    | ai
-    | StrOutputParser()
-    | RunnableParallel(branches={"pros": pros_branch_chain, "cons": cons_branch_chain})
-    | RunnableLambda(lambda x: combine_pros_cons(x["branches"]["pros"], x["branches"]["cons"]))
-)
+# def combine_pros_cons(pros, cons):
+#     return f"Pros:\n{pros}\n\nCons:\n{cons}"
 
-result = chain.invoke({"product":"Macbook Pro"})
+# pros_branch_chain =( 
+#     RunnableLambda(lambda x: analyze_pros(x)) | ai | StrOutputParser()
+# )
 
-print(result)
+# cons_branch_chain =( 
+#     RunnableLambda(lambda x: analyze_cons(x)) | ai | StrOutputParser()
+# )
+
+
+# chain = (
+#     prompt_template
+#     | ai
+#     | StrOutputParser()
+#     | RunnableParallel(branches={"pros": pros_branch_chain, "cons": cons_branch_chain})
+#     | RunnableLambda(lambda x: combine_pros_cons(x["branches"]["pros"], x["branches"]["cons"]))
+# )
+
+# result = chain.invoke({"product":"Macbook Pro"})
+
+# print(result)
+
+
 # Branching
 
 
