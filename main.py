@@ -295,6 +295,81 @@ ai = ChatGoogleGenerativeAI(model="gemini-1.5-flash",temperature=0.9)
 
 
 # Branching
+# Creating a program that automatically generates a reply based on the feedback/review given by the customer
+
+positive_feedback_template = ChatPromptTemplate(
+    [
+        ("system", "You're a helpful assistant."),
+        ("human","Generate a thank you note for this positive feedback: {feedback}")
+    ]
+)
+
+negative_feedback_template = ChatPromptTemplate(
+    [
+        ("system", "You're a helpful assistant."),
+        ("human","Generate a response addressing this negative feedback: {feedback}")
+    ]
+)
+
+neutral_feedback_template = ChatPromptTemplate(
+    [
+        ("system", "You're a helpful assistant."),
+        ("human","Generate a request for more details for this neutral feedback: {feedback}")
+    ]
+)
+
+escalate_feedback_template = ChatPromptTemplate(
+    [
+        ("system", "You're a helpful assistant."),
+        ("human","Generate a message to escalate this feedback to a human agent: {feedback}")
+    ]
+)
+
+classification_template = ChatPromptTemplate(
+    [
+    ("system", "You're an helpful assistant."),
+    ("user","Classify the sentiment of this feedback as positive, negative, neutral or escalate: {feedback}")
+    ]
+)
+
+
+
+branches = RunnableBranch(
+    (
+        lambda x: "positive" in x,
+        positive_feedback_template | ai | StrOutputParser()
+    ),
+    (
+        lambda x: "negative" in x,
+        negative_feedback_template | ai | StrOutputParser()
+    ),
+    (
+        lambda x: "neutral" in x,
+        neutral_feedback_template | ai | StrOutputParser()
+    ),
+    escalate_feedback_template | ai | StrOutputParser()
+)
+
+show_output = RunnableLambda(lambda x : print(f"{x} \n\n"))
+
+
+classification_chain = classification_template | ai | StrOutputParser()
+
+chain = classification_chain | branches
+
+
+# Run the chain with an example review
+# Good review - "The product is excellent. I really enjoyed using it and found it very helpful."
+# Bad review - "The product is terrible. It broke after just one use and the quality is very poor."
+# Neutral review - "The product is okay. It works as expected but nothing exceptional."
+# Default - "I'm not sure about the product yet. Can you tell me more about its features and benefits?"
+
+review = "The product is terrible. It broke after just one use and the quality is very poor."
+result =chain.invoke({"feedback": review})
+
+# Output the result
+print(result)
+
 
 
 
